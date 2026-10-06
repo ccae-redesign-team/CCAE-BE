@@ -13,12 +13,12 @@ class InfoModel:
     def __init__(self):
         self.data = [
             {
-                "FirstName": "John",
-                "LastName": "Mortensen",
-                "DOB": "October 21",
+                "FirstName": "Barbara",
+                "LastName": "Zhao",
+                "DOB": "Unknown",
                 "Residence": "San Diego",
-                "Email": "jmortensen@powayusd.com",
-                "Owns_Cars": ["2015-Fusion", "2011-Ranger", "2003-Excursion", "1997-F350", "1969-Cadillac", "2015-Kuboto-3301"]
+                "Email": "N/A",
+                "Owns_Cars": "None"
             },
             {
                 "FirstName": "Shane",
