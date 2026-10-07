@@ -1,12 +1,24 @@
 # Refactored: Use CRUD naming (read, create) in InfoModel
 from flask import Flask, jsonify, request
+import os
 from flask_cors import CORS
 from flask_restful import Api, Resource
 
 app = Flask(__name__)
-CORS(app, supports_credentials=True, origins='*')
+
+# Only allow the CCAE frontend (deployed and local dev)
+CORS(
+    app,
+    supports_credentials=True,
+    origins=[
+        "https://ccae-redesign-team.github.io",  # deployed CCAE-FE
+        "http://localhost:4000",                 # local frontend (adjust to your port)
+        "http://localhost:4500",
+    ],
+)
 
 api = Api(app)
+
 
 # --- Model class for InfoDb with CRUD naming ---
 class InfoModel:
@@ -18,7 +30,7 @@ class InfoModel:
                 "DOB": "Unknown",
                 "Residence": "San Diego",
                 "Email": "N/A",
-                "Owns_Cars": "None"
+                "Owns_Cars": "None",
             },
             {
                 "FirstName": "Shane",
@@ -26,8 +38,8 @@ class InfoModel:
                 "DOB": "February 27",
                 "Residence": "San Diego",
                 "Email": "slopez@powayusd.com",
-                "Owns_Cars": ["2021-Insight"]
-            }
+                "Owns_Cars": ["2021-Insight"],
+            },
         ]
 
     def read(self):
@@ -36,8 +48,10 @@ class InfoModel:
     def create(self, entry):
         self.data.append(entry)
 
+
 # Instantiate the model
 info_model = InfoModel()
+
 
 # --- API Resource ---
 class DataAPI(Resource):
@@ -52,10 +66,12 @@ class DataAPI(Resource):
         info_model.create(entry)
         return {"message": "Entry added successfully", "entry": entry}, 201
 
-api.add_resource(DataAPI, '/api/data')
 
-# Wee can use @app.route for HTML endpoints, this will be style for Admin UI
-@app.route('/')
+api.add_resource(DataAPI, "/api/data")
+
+
+# We can use @app.route for HTML endpoints, this will be style for Admin UI
+@app.route("/")
 def say_hello():
     html_content = """
     <html>
@@ -69,5 +85,6 @@ def say_hello():
     """
     return html_content
 
-if __name__ == '__main__':
-    app.run(port=5001)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5001)))
